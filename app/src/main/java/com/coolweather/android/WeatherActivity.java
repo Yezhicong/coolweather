@@ -31,9 +31,9 @@ import okhttp3.Response;
 
 public class WeatherActivity extends AppCompatActivity {
 
-    public DrawerLayout drawerLayout;
+    public  DrawerLayout drawerLayout;
+    public  SwipeRefreshLayout swipeRefresh;
     private Button navButton;
-    public SwipeRefreshLayout swipeRefresh;
     private String mWertherId;
     private ScrollView weatherLayout;
     private TextView titleCity;
@@ -47,6 +47,7 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView carWashText;
     private TextView sportText;
     private ImageView bingPicImg;
+    private ImageView datePicImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,22 +60,25 @@ public class WeatherActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
         setContentView(R.layout.activity_weather);
-        bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
-        weatherLayout = (ScrollView) findViewById(R.id.weather_layout);
-        titleCity = (TextView) findViewById(R.id.title_city);
-        titleUpdateTime = (TextView) findViewById(R.id.title_update_time);
-        degreeText = (TextView) findViewById(R.id.degree_text);
-        weatherInfoText = (TextView) findViewById(R.id.weather_info_text);
-        forecastLayout = (LinearLayout) findViewById(R.id.forecast_layout);
-        aqiText = (TextView) findViewById(R.id.aqi_text);
-        pm25Text = (TextView) findViewById(R.id.pm25_text);
-        comfortText = (TextView) findViewById(R.id.comfort_text);
-        carWashText = (TextView) findViewById(R.id.car_wash_text);
-        sportText = (TextView) findViewById(R.id.sport_text);
-        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+
+        datePicImg      = (ImageView)    findViewById (R.id.date_pic);
+        bingPicImg      = (ImageView)    findViewById (R.id.bing_pic_img);
+        weatherLayout   = (ScrollView)   findViewById (R.id.weather_layout);
+        titleCity       = (TextView)     findViewById (R.id.title_city);
+        titleUpdateTime = (TextView)     findViewById (R.id.title_update_time);
+        degreeText      = (TextView)     findViewById (R.id.degree_text);
+        weatherInfoText = (TextView)     findViewById (R.id.weather_info_text);
+        forecastLayout  = (LinearLayout) findViewById (R.id.forecast_layout);
+        aqiText         = (TextView)     findViewById (R.id.aqi_text);
+        pm25Text        = (TextView)     findViewById (R.id.pm25_text);
+        comfortText     = (TextView)     findViewById (R.id.comfort_text);
+        carWashText     = (TextView)     findViewById (R.id.car_wash_text);
+        sportText       = (TextView)     findViewById (R.id.sport_text);
+        drawerLayout    = (DrawerLayout) findViewById (R.id.drawer_layout);
+        navButton       = (Button)       findViewById (R.id.nav_button);
+
+        swipeRefresh    = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navButton = (Button) findViewById(R.id.nav_button);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = prefs.getString("weather", null);
         if (weatherString != null) {
@@ -185,6 +189,16 @@ public class WeatherActivity extends AppCompatActivity {
         degreeText.setText(degree);
         weatherInfoText.setText(weatherInfo);
         forecastLayout.removeAllViews();
+        int i = Integer.parseInt(weather.now.more.infoNum);
+        if (i == 100) {
+            datePicImg.setImageResource(R.drawable.qing);
+        } else if (i >=101 && i <= 102) {
+            datePicImg.setImageResource(R.drawable.duoyun);
+        } else if (i == 104) {
+            datePicImg.setImageResource(R.drawable.yun);
+        } else if (i >=300 && i <= 399) {
+            datePicImg.setImageResource(R.drawable.yu);
+        }
         for (Forecast forecast : weather.forecastList) {
             View view = LayoutInflater.from(this).inflate(R.layout.forecast_item,
                     forecastLayout, false);
